@@ -1,0 +1,99 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class Pet {
+private:
+    int ID, tuoi;
+    string loai, giong, gioiTinh, chuSoHuu;
+
+public:
+    void Nhap();
+    void Xuat();
+    void suaTungThongTin(); //Hàm cho phép sửa thông tin nếu nhầm
+};
+// Ham nhap thong tin thu cung
+void Pet::Nhap() {
+    cout << "\n----- Vui long nhap cac thong tin sau -----\n";
+    cout << "Moi ban nhap ID: ";
+    cin >> ID;
+    cout << "Moi ban nhap tuoi: ";
+    cin >> tuoi;
+    cin.ignore(); // xoa '\n' con lai
+    cout << "Moi ban nhap loai (vi du: cho, meo): ";
+    getline(cin, loai);
+    cout << "Moi ban nhap giong: ";
+    getline(cin, giong);
+    cout << "Moi ban nhap gioi tinh: ";
+    getline(cin, gioiTinh);
+    cout << "Moi ban nhap ten chu so huu: ";
+    getline(cin, chuSoHuu);
+}
+// Ham xuat thong tin thu cung
+void Pet::Xuat() {
+    cout << "\n----- Thong tin thu cung -----\n";
+    cout << "ID: " << ID << endl;
+    cout << "Tuoi: " << tuoi << endl;
+    cout << "Loai: " << loai << endl;
+    cout << "Giong: " << giong << endl;
+    cout << "Gioi tinh: " << gioiTinh << endl;
+    cout << "Chu so huu: " << chuSoHuu << endl;
+}
+// Ham cho phep sua thong tin cu the theo lua chon
+void Pet::suaTungThongTin() {
+    int x;
+    do {
+        cout << "\n------ Ban muon sua thong tin nao? -----\n";
+        cout << "0: Khong sua nua\n";
+        cout << "1: Sua ID\n";
+        cout << "2: Sua tuoi\n";
+        cout << "3: Sua loai\n";
+        cout << "4: Sua giong\n";
+        cout << "5: Sua gioi tinh\n";
+        cout << "6: Sua chu so huu\n";
+        cout << "Nhap lua chon cua ban: ";
+        cin >> x;
+        cin.ignore(); // tranh loi khi nhap chuoi
+        switch (x) {
+        case 0:
+            cout << "Ket thuc sua.\n";
+            break;
+        case 1:
+            cout << "Nhap ID moi: ";
+            cin >> ID;
+            cin.ignore();
+            break;
+        case 2:
+            cout << "Nhap tuoi moi: ";
+            cin >> tuoi;
+            cin.ignore();
+            break;
+        case 3:
+            cout << "Nhap loai moi: ";
+            getline(cin, loai);
+            break;
+        case 4:
+            cout << "Nhap giong moi: ";
+            getline(cin, giong);
+            break;
+        case 5:
+            cout << "Nhap gioi tinh moi: ";
+            getline(cin, gioiTinh);
+            break;
+        case 6:
+            cout << "Nhap ten chu so huu moi: ";
+            getline(cin, chuSoHuu);
+            break;
+        default:
+            cout << "Lua chon khong hop le. Vui long thu lai.\n";
+        }
+    } while (x != 0);
+}
+// Ham chinh
+int main() {
+    Pet so1;
+    so1.Nhap();
+    so1.Xuat();
+    so1.suaTungThongTin(); // Cho phep sua thong tin
+    so1.Xuat(); // In lai thong tin sau khi sua
+    return 0;
+}
