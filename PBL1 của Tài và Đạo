@@ -1,35 +1,46 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 using namespace std;
+
+const int MAX = 1000;
+
 class Pet {
 private:
     int ID, tuoi;
-    string loai, giong, gioiTinh, chuSoHuu;
-
+    string ten, loai,giong,gioiTinh,chuSoHuu,khamDinhKy;
 public:
-    void Nhap();
-    void Xuat();
-    void suaTungThongTin(); //Hàm cho phép sửa thông tin nếu nhầm
+    Pet();
+    void nhap();
+    void xuat();
+    void sua();
+    void into_file(ofstream& fout);
+    void read_file(ifstream& fin);
+    int getID();
+    string getTen();
+    string getGiong();
+    string getKhamDinhKy();
+    int getTuoi();
 };
-// Ham nhap thong tin thu cung
-void Pet::Nhap() {
-    cout << "\n----- Vui long nhap cac thong tin sau -----\n";
-    cout << "Moi ban nhap ID: ";
-    cin >> ID;
-    cout << "Moi ban nhap tuoi: ";
-    cin >> tuoi;
-    cin.ignore(); // xoa '\n' con lai
-    cout << "Moi ban nhap loai (vi du: cho, meo): ";
-    getline(cin, loai);
-    cout << "Moi ban nhap giong: ";
-    getline(cin, giong);
-    cout << "Moi ban nhap gioi tinh: ";
-    getline(cin, gioiTinh);
-    cout << "Moi ban nhap ten chu so huu: ";
-    getline(cin, chuSoHuu);
+
+Pet::Pet() {
+    ID = 0;
+    tuoi = 0;
 }
-// Ham xuat thong tin thu cung
-void Pet::Xuat() {
+
+void Pet::nhap() {
+    cout << "Nhap ID: "; cin >> ID;
+    cin.ignore();
+    cout << "Nhap ten: "; getline(cin, ten);
+    cout << "Nhap loai: "; getline(cin, loai);
+    cout << "Nhap giong: "; getline(cin, giong);
+    cout << "Nhap gioi tinh: "; getline(cin, gioiTinh);
+    cout << "Nhap tuoi: "; cin >> tuoi; cin.ignore();
+    cout << "Nhap chu so huu: "; getline(cin, chuSoHuu);
+    cout << "Nhap lich kham dinh ky: "; getline(cin, khamDinhKy);
+}
+
+void Pet::xuat() {
     cout << "\n----- Thong tin thu cung -----\n";
     cout << "ID: " << ID << endl;
     cout << "Tuoi: " << tuoi << endl;
@@ -38,62 +49,185 @@ void Pet::Xuat() {
     cout << "Gioi tinh: " << gioiTinh << endl;
     cout << "Chu so huu: " << chuSoHuu << endl;
 }
-// Ham cho phep sua thong tin cu the theo lua chon
-void Pet::suaTungThongTin() {
-    int x;
-    do {
-        cout << "\n------ Ban muon sua thong tin nao? -----\n";
-        cout << "0: Khong sua nua\n";
-        cout << "1: Sua ID\n";
-        cout << "2: Sua tuoi\n";
-        cout << "3: Sua loai\n";
-        cout << "4: Sua giong\n";
-        cout << "5: Sua gioi tinh\n";
-        cout << "6: Sua chu so huu\n";
-        cout << "Nhap lua chon cua ban: ";
-        cin >> x;
-        cin.ignore(); // tranh loi khi nhap chuoi
-        switch (x) {
-        case 0:
-            cout << "Ket thuc sua.\n";
-            break;
-        case 1:
-            cout << "Nhap ID moi: ";
-            cin >> ID;
-            cin.ignore();
-            break;
-        case 2:
-            cout << "Nhap tuoi moi: ";
-            cin >> tuoi;
-            cin.ignore();
-            break;
-        case 3:
-            cout << "Nhap loai moi: ";
-            getline(cin, loai);
-            break;
-        case 4:
-            cout << "Nhap giong moi: ";
-            getline(cin, giong);
-            break;
-        case 5:
-            cout << "Nhap gioi tinh moi: ";
-            getline(cin, gioiTinh);
-            break;
-        case 6:
-            cout << "Nhap ten chu so huu moi: ";
-            getline(cin, chuSoHuu);
-            break;
-        default:
-            cout << "Lua chon khong hop le. Vui long thu lai.\n";
-        }
-    } while (x != 0);
+
+void Pet::sua() {
+    cout << "Sua thong tin cho thu cung co ID: " << ID << endl;
+    nhap();
 }
-// Ham chinh
+
+void Pet::into_file(ofstream& fout) {
+    fout << ID << "," << ten << "," << loai << "," << giong << "," << gioiTinh << ","
+        << tuoi << "," << chuSoHuu << "," << khamDinhKy << endl;
+}
+
+void Pet::read_file(ifstream& fin) {
+    string line;
+    getline(fin, line);
+    if (line.empty()) return;
+    size_t pos = 0;
+    string data[8];
+    int i = 0;
+    while ((pos = line.find(",")) != string::npos && i < 7) {
+        data[i++] = line.substr(0, pos);
+        line.erase(0, pos + 1);
+    }
+    data[i] = line;
+    ID = stoi(data[0]); ten = data[1]; loai = data[2]; giong = data[3]; gioiTinh = data[4];
+    tuoi = stoi(data[5]); chuSoHuu = data[6]; khamDinhKy = data[7];
+}
+
+int Pet::getID() { return ID; }
+string Pet::getTen() { return ten; }
+string Pet::getGiong() { return giong; }
+string Pet::getKhamDinhKy() { return khamDinhKy; }
+int Pet::getTuoi() { return tuoi; }
+
+class QuanLyPet {
+private:
+    Pet ds[MAX];
+    int soLuong;
+public:
+    QuanLyPet();
+    void add_pet();
+    void show_pet();
+    void search_pet();
+    void edit_pet();
+    void delete_pet();
+    void sort_name_pet();
+    void ghi_file();
+    void doc_file();
+    void thong_ke();
+    void nhac_kham();
+};
+
+QuanLyPet::QuanLyPet() {
+    soLuong = 0;
+}
+
+void QuanLyPet::add_pet() {
+    if (soLuong < MAX) {
+        ds[soLuong].nhap();
+        soLuong++;
+    }
+    else {
+        cout << "Danh sach da day!\n";
+    }
+}
+
+void QuanLyPet::show_pet() {
+    for (int i = 0; i < soLuong; i++) {
+        ds[i].xuat();
+    }
+}
+
+void QuanLyPet::search_pet() {
+    int id;
+    cout << "Nhap ID can tim: "; cin >> id;
+    for (int i = 0; i < soLuong; i++) {
+        if (ds[i].getID() == id) {
+            ds[i].xuat();
+            return;
+        }
+    }
+    cout << "Khong tim thay!\n";
+}
+
+void QuanLyPet::edit_pet() {
+    int id;
+    cout << "Nhap ID can sua: "; cin >> id;
+    for (int i = 0; i < soLuong; i++) {
+        if (ds[i].getID() == id) {
+            ds[i].sua();
+            return;
+        }
+    }
+    cout << "Khong tim thay!\n";
+}
+
+void QuanLyPet::delete_pet() {
+    int id;
+    cout << "Nhap ID can xoa: "; cin >> id;
+    for (int i = 0; i < soLuong; i++) {
+        if (ds[i].getID() == id) {
+            for (int j = i; j < soLuong - 1; j++) {
+                ds[j] = ds[j + 1];
+            }
+            soLuong--;
+            cout << "Da xoa!\n";
+            return;
+        }
+    }
+    cout << "Khong tim thay!\n";
+}
+
+void QuanLyPet::sort_name_pet() {
+    for (int i = 0; i < soLuong - 1; i++) {
+        for (int j = i + 1; j < soLuong; j++) {
+            if (ds[i].getTen() > ds[j].getTen()) {
+                Pet tmp = ds[i];
+                ds[i] = ds[j];
+                ds[j] = tmp;
+            }
+        }
+    }
+    cout << "Da sap xep theo ten!\n";
+}
+
+void QuanLyPet::ghi_file() {
+    ofstream fout("pets.txt");
+    for (int i = 0; i < soLuong; i++) {
+        ds[i].into_file(fout);
+    }
+    fout.close();
+    cout << "Da ghi file!\n";
+}
+
+void QuanLyPet::doc_file() {
+    ifstream fin("pets.txt");
+    soLuong = 0;
+    while (!fin.eof()) {
+        ds[soLuong].read_file(fin);
+        if (fin.eof()) break;
+        soLuong++;
+    }
+    fin.close();
+    cout << "Da doc file!\n";
+}
+
+void QuanLyPet::thong_ke() {
+    int tongTuoi = 0;
+    for (int i = 0; i < soLuong; i++) {
+        tongTuoi += ds[i].getTuoi();
+    }
+    cout << "So thu cung: " << soLuong << endl;
+    cout << "Tuoi trung binh: " << (soLuong ? (float)tongTuoi / soLuong : 0) << endl;
+}
+
+void QuanLyPet::nhac_kham() {
+    cout << "Cac thu cung can nhac kham dinh ky: \n";
+    for (int i = 0; i < soLuong; i++) {
+        cout << ds[i].getTen() << ": " << ds[i].getKhamDinhKy() << endl;
+    }
+}
+
 int main() {
-    Pet so1;
-    so1.Nhap();
-    so1.Xuat();
-    so1.suaTungThongTin(); // Cho phep sua thong tin
-    so1.Xuat(); // In lai thong tin sau khi sua
+    QuanLyPet ql;
+    int chon;
+    do {
+        cout << "\n1. Them\n2. Hien thi\n3. Tim\n4. Sua\n5. Xoa\n6. Sap xep\n7. Ghi file\n8. Doc file\n9. Thong ke\n10. Nhac kham\n0. Thoat\nChon: ";
+        cin >> chon;
+        switch (chon) {
+        case 1: ql.add_pet(); break;
+        case 2: ql.show_pet(); break;
+        case 3: ql.search_pet(); break;
+        case 4: ql.edit_pet(); break;
+        case 5: ql.delete_pet(); break;
+        case 6: ql.sort_name_pet(); break;
+        case 7: ql.ghi_file(); break;
+        case 8: ql.doc_file(); break;
+        case 9: ql.thong_ke(); break;
+        case 10: ql.nhac_kham(); break;
+        }
+    } while (chon != 0);
     return 0;
 }
